@@ -1,10 +1,16 @@
 require "pry-rails"
 class Encoder
-  attr_accessor :probability_one, :encode_hash
+  attr_accessor :probability_one, :encode_hash, :encoded_letters
 
   def initialize(probability_one)
     @probability_one = probability_one
     @encode_hash = Hash.new{ |hsh, key| hsh[key] = ""}
+    @encoded_letters = {}
+  end
+
+  def get_encoded_letters
+    @encode_hash.keys.each { |k| @encoded_letters[k] = @encode_hash[k] if k.length == 1 }
+    @encoded_letters = @encoded_letters.sort.to_h
   end
 
   def block_to_string(block, string = "")
