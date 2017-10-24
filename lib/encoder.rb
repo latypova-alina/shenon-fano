@@ -1,28 +1,19 @@
 require "pry-rails"
 class Encoder
-  attr_accessor :probability_one, :encode_hash#, :encode_array
+  attr_accessor :probability_one, :encode_hash
 
   def initialize(probability_one)
     @probability_one = probability_one
     @encode_hash = Hash.new{ |hsh, key| hsh[key] = ""}
-    # @encode_array = []
   end
 
   def block_to_string(block, string = "")
-    block.keys.each {|element| string << "#{element}_"}
+    block.keys.each {|element| string << "#{element}"}
     string
   end
 
   def encode_block(probability_block, current_p, code_value, previous_key = nil)
-    # if @encode_array.include?(@encode)
-    #   return
-    # end
-    if @encode_hash.keys.include?(block_to_string(probability_block))
-      # @encode_array << @encode
-      # @encode = Hash.new("")
-      return
-    end
-    binding.pry
+    return if @encode_hash.keys.include?(block_to_string(probability_block))
     key = block_to_string(probability_block)
     previous_key = key if previous_key.nil?
     @encode_hash[key] = @encode_hash[previous_key] + code_value
