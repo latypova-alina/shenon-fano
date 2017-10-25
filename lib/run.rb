@@ -73,7 +73,7 @@ def run(source)
   write_to_file("КОДИРОВАНИЕ АЛФАВИТА:", text_code.encode_hash)
   text_code.get_encoded_letters
   write_to_file("КОДИРОВАНИЕ АЛФАВИТА:", text_code.encoded_letters)
-  text_code.encode_text("Памятник.txt", "encode.cake")
+  text_code.encode_text(source, "encode.cake")
   text_code.decode_text("encode.cake")
 end
 
