@@ -7,10 +7,19 @@ class Encoder
     @encoded_letters = {}
   end
 
+  def encode(probability_block, current_p, previous_key = nil)
+    return if probability_block.empty?
+    first_block, second_block, current_p = devide(probability_block, current_p)
+    encode_block(first_block, current_p/2, "0", previous_key)
+    encode_block(second_block, current_p/2, "1", previous_key)
+  end
+
   def get_encoded_letters
     @encode_hash.keys.each { |k| @encoded_letters[k] = @encode_hash[k] if k.length == 1 }
     @encoded_letters = @encoded_letters.sort.to_h
   end
+
+  private
 
   def block_to_string(block, string = "")
     block.keys.each {|element| string << "#{element}"}
@@ -48,12 +57,5 @@ class Encoder
 
   def uneven_case?(block1, block2)
     (block1.empty? && block2.length > 1) || (block2.empty? && block1.length > 1)
-  end
-
-  def encode(probability_block, current_p, previous_key = nil)
-    return if probability_block.empty?
-    first_block, second_block, current_p = devide(probability_block, current_p)
-    encode_block(first_block, current_p/2, "0", previous_key)
-    encode_block(second_block, current_p/2, "1", previous_key)
   end
 end
