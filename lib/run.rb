@@ -10,6 +10,10 @@ class Matrix
   end
 end
 
+class String
+  attr_accessor :bytes
+end
+
 def russian_alphabet
   russian_alphabet = Alphabet.new
   russian_alphabet.add_to_alphabet(('А'..'я').to_a)
@@ -56,6 +60,7 @@ R_A = russian_alphabet
 def run(source)
   R_A.initialize_symbols_amount
   text = TextInfo.new(source, R_A)
+  open('file.txt', 'a') { |f| f << "\n\n#{source}\n\n" }
   letters_amount(R_A, text)
   # write_to_file("КОЛИЧЕСТВО КАЖДОЙ БУКВЫ:", letters_amount(R_A, text))
   open('file.txt', 'a') { |f| f << "\n\nВСЕГО БУКВ: #{text.char_count}\n\n" }
@@ -68,6 +73,8 @@ def run(source)
   write_to_file("КОДИРОВАНИЕ АЛФАВИТА:", text_code.encode_hash)
   text_code.get_encoded_letters
   write_to_file("КОДИРОВАНИЕ АЛФАВИТА:", text_code.encoded_letters)
+  text_code.encode_text("Памятник.txt", "encode.cake")
+  text_code.decode_text("encode.cake")
 end
 
-run("Памятник.txt")
+run ("ПреступлениеИНаказание.txt")
