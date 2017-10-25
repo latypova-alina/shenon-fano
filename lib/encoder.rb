@@ -1,10 +1,12 @@
 require "pry-rails"
 class Encoder
-  attr_accessor :encode_hash, :encoded_letters
+  attr_accessor :encode_hash, :encoded_letters, :encoded_text_array, :decoded_text
 
   def initialize
     @encode_hash = Hash.new{ |hsh, key| hsh[key] = ""}
     @encoded_letters = {}
+    @encoded_text_array = []
+    @decoded_text = ""
   end
 
   def encode(probability_block, current_p, previous_key = nil)
@@ -19,7 +21,34 @@ class Encoder
     @encoded_letters = @encoded_letters.sort.to_h
   end
 
+  def encode_text(input_file, output_file)
+    File.open(input_file, "r") do |file|
+      file.each_char do |c|
+        @encoded_text_array << @encoded_letters[c] if @encoded_letters[c]
+      end
+    end
+    create_encoded_file(output_file)
+  end
+
+  def decode_text(file)
+    bits = File.binread(file).unpack("B*")[0]
+    bit = ""
+    for i in 0...(bits.length - 1)
+      if @encoded_letters.values.include?(bit << bits[i])
+        @decoded_text << @encoded_letters.key(bit)
+        bit = ""
+      end
+    end
+    @decoded_text
+  end
+
   private
+
+  def create_encoded_file(output_file)
+    File.open(output_file, 'wb' ) do |output|
+      output.write [@encoded_text_array.join].pack("B*")
+    end
+  end
 
   def block_to_string(block, string = "")
     block.keys.each {|element| string << "#{element}"}
