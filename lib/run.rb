@@ -62,8 +62,9 @@ def run(source)
   text_p = Probability.new(text)
   text_p.count_probability
   write_to_file("ВЕРОЯТНОСТЬ ДЛЯ 1 БУКВЫ:", text_p.one_letter_p)
-  text_code = Encoder.new(text_p)
-  text_code.encode(text_p.one_letter_p, 1.0)
+  text_code = Encoder.new()
+  sorted_p = Hash[ text_p.one_letter_p.sort_by{ |k, v| v }.reverse ]
+  text_code.encode(sorted_p, 1.0)
   write_to_file("КОДИРОВАНИЕ АЛФАВИТА:", text_code.encode_hash)
   text_code.get_encoded_letters
   write_to_file("КОДИРОВАНИЕ АЛФАВИТА:", text_code.encoded_letters)

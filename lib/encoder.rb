@@ -1,9 +1,8 @@
 require "pry-rails"
 class Encoder
-  attr_accessor :probability_one, :encode_hash, :encoded_letters
+  attr_accessor :encode_hash, :encoded_letters
 
-  def initialize(probability_one)
-    @probability_one = probability_one
+  def initialize
     @encode_hash = Hash.new{ |hsh, key| hsh[key] = ""}
     @encoded_letters = {}
   end
@@ -28,20 +27,27 @@ class Encoder
   end
 
   def devide(probability_block, current_p)
-    sum_p = 0.0
-    first_block, second_block = {}, {}
-    if probability_block.length == 2
-      first_block[probability_block.keys[0]] = probability_block.values[0]
-      second_block[probability_block.keys[1]] = probability_block.values[1]
-      sum_p = current_p/2
-    else
-      probability_block.each_with_index do |element, i|
-        key, value = element[0], element[1]
-        sum_p = sum_p + value
-        sum_p <= current_p/2 ? (first_block[key] = value) : (second_block[key] = value)
-      end
+    p_b = probability_block
+    first_block, second_block, sum_p = distribute_probabilities(p_b, current_p/2)
+    if uneven_case?(first_block, second_block)
+      first_block, second_block, sum_p = distribute_probabilities(p_b, p_b.values.max)
     end
     return first_block, second_block, sum_p
+  end
+
+  def distribute_probabilities(probability_block, compare_value)
+    sum_p = 0.0
+    first_block, second_block = {}, {}
+    probability_block.each_with_index do |element, i|
+      key, value = element[0], element[1]
+      sum_p = sum_p + value
+      sum_p <= compare_value ? (first_block[key] = value) : (second_block[key] = value)
+    end
+    return first_block, second_block, sum_p
+  end
+
+  def uneven_case?(block1, block2)
+    (block1.empty? && block2.length > 1) || (block2.empty? && block1.length > 1)
   end
 
   def encode(probability_block, current_p, previous_key = nil)
