@@ -66,8 +66,15 @@ def prepare_probability(text_p)
   text_p.count_two_dependant_letters_probability
 end
 
-def prepare_encode(text_code)
-
+def prepare_shenon_encode(proba, symbol_length, source)
+  text_code = Encoder.new()
+  sorted_p = Hash[ proba.sort_by{ |k, v| v }.reverse ]
+  text_code.encode(sorted_p, 1.0)
+  write_to_file("ДЕРЕВО КОДИРОВАНИЯ #{symbol_length}:", text_code.encode_hash)
+  text_code.get_encoded_letters(symbol_length)
+  write_to_file("КОДИРОВАНИЕ АЛФАВИТА #{symbol_length}:", text_code.encoded_letters)
+  text_code.encode_text(source, "shenon_#{symbol_length}_encode.cake", symbol_length)
+  # text_code.decode_text("encode.cake")
 end
 
 def run(source)
@@ -80,23 +87,10 @@ def run(source)
 
   text_p = Probability.new(text)
   prepare_probability(text_p)
-  write_to_file("ВЕРОЯТНОСТЬ ДЛЯ 1 БУКВЫ:", text_p.one_letter_p)
+  # write_to_file("ВЕРОЯТНОСТЬ ДЛЯ 1 БУКВЫ:", text_p.one_letter_p)
 
-  text_code = Encoder.new(text_p)
-  # sorted_p = Hash[ text_p.one_letter_p.sort_by{ |k, v| v }.reverse ]
-  # text_code.encode(sorted_p, 1.0)
-  # write_to_file("ДЕРЕВО КОДИРОВАНИЯ:", text_code.encode_hash)
-  # text_code.get_encoded_letters(1)
-  # write_to_file("КОДИРОВАНИЕ АЛФАВИТА:", text_code.encoded_letters)
-  # text_code.encode_text(source, "encode.cake")
-  # text_code.decode_text("encode.cake")
-
-  sorted_p = Hash[ text_p.two_letters_p.sort_by{ |k, v| v }.reverse ]
-  text_code.encode(sorted_p, 1.0)
-  write_to_file("ДЕРЕВО КОДИРОВАНИЯ:", text_code.encode_hash)
-  text_code.get_encoded_letters(3)
-  write_to_file("КОДИРОВАНИЕ АЛФАВИТА:", text_code.encoded_letters)
-
+  prepare_shenon_encode(text_p.one_letter_p, 1, source)
+  prepare_shenon_encode(text_p.two_letters_p, 2, source)
 end
 
-run ("Памятник.txt")
+run ("ПреступлениеИНаказание.txt")

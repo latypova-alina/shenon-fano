@@ -21,12 +21,9 @@ class Encoder
     @encoded_letters = @encoded_letters.sort.to_h
   end
 
-  def encode_text(input_file, output_file)
-    File.open(input_file, "r") do |file|
-      file.each_char do |c|
-        @encoded_text_array << @encoded_letters[c] if @encoded_letters[c]
-      end
-    end
+  def encode_text(input_file, output_file, symbol_length)
+    encode_by_one(input_file, output_file) if symbol_length == 1
+    encode_by_two(input_file, output_file) if symbol_length == 2
     create_encoded_file(output_file)
   end
 
@@ -43,6 +40,29 @@ class Encoder
   end
 
   private
+
+  def encode_by_one(input_file, output_file)
+    File.open(input_file, "r") do |file|
+      file.each_char do |c|
+        @encoded_text_array << @encoded_letters[c] if @encoded_letters[c]
+      end
+    end
+  end
+
+  def encode_by_two(input_file, output_file)
+    File.open(input_file, "r") do |file|
+      file.each_line do |line|
+        for i in 0...(line.length - 2)
+          two_chars = [line[i], line[i+1]]
+          regex = "#{two_chars[0]}#{two_chars[1]}"
+          if @encoded_letters[regex]
+            @encoded_text_array << @encoded_letters[regex]
+          end
+        end
+      end
+    end
+    create_encoded_file(output_file)
+  end
 
   def create_encoded_file(output_file)
     File.open(output_file, 'wb' ) do |output|

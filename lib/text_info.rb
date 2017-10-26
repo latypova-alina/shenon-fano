@@ -31,7 +31,7 @@ class TextInfo
       file.each_line do |line|
         for i in 0...(line.length - 2)
           two_chars = [line[i], line[i+1]]
-          regex = "#{two_chars[0]}_#{two_chars[1]}"
+          regex = "#{two_chars[0]}#{two_chars[1]}"
           if letters_included_in_alphabet?(two_chars)
             if @two_letters[regex]
               @two_letters[regex] += 1.0
