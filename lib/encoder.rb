@@ -16,8 +16,8 @@ class Encoder
     encode_block(second_block, current_p/2, "1", previous_key)
   end
 
-  def get_encoded_letters
-    @encode_hash.keys.each { |k| @encoded_letters[k] = @encode_hash[k] if k.length == 1 }
+  def get_encoded_letters(symbol_length)
+    @encode_hash.keys.each { |k| @encoded_letters[k] = @encode_hash[k] if k.length == symbol_length }
     @encoded_letters = @encoded_letters.sort.to_h
   end
 
