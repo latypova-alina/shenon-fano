@@ -27,8 +27,8 @@ class Encoder
     create_encoded_file(output_file)
   end
 
-  def decode_text(file)
-    bits = File.binread(file).unpack("B*")[0]
+  def decode_text(input_file, output_file)
+    bits = File.binread(input_file).unpack("B*")[0]
     bit = ""
     for i in 0...(bits.length - 1)
       if @encoded_letters.values.include?(bit << bits[i])
@@ -36,6 +36,7 @@ class Encoder
         bit = ""
       end
     end
+    open(output_file, 'a') { |f| f << @decoded_text }
     @decoded_text
   end
 

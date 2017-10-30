@@ -74,7 +74,7 @@ def prepare_shenon_encode(proba, symbol_length, source)
   text_code.get_encoded_letters(symbol_length)
   write_to_file("КОДИРОВАНИЕ АЛФАВИТА #{symbol_length}:", text_code.encoded_letters)
   text_code.encode_text(source, "shenon_#{symbol_length}_encode.cake", symbol_length)
-  # text_code.decode_text("encode.cake")
+  text_code.decode_text("shenon_1_encode.cake", "ПреступлениеИНаказание_decoded.txt") if symbol_length == 1
 end
 
 def run(source)
